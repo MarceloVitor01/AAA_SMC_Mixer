@@ -194,6 +194,8 @@ SLIDERCHANNEL = 1  # Channel assignment for all mapped CCs; valid range is 0 to 
 TEMPO_TOP = 180.0  # Upper limit of tempo control in BPM (max is 999)
 TEMPO_BOTTOM = 100.0  # Lower limit of tempo control in BPM (min is 0)
 
+KNOB_CUSTOM = 58  # Knob para movimentação das trilhas
+
 TEMPOCONTROL = -1  # Tempo control CC assignment; control range is set above
 MASTERVOLUME = 50  # Master track volume
 CUELEVEL = -1  # Cue level control

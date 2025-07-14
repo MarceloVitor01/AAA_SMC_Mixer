@@ -16,6 +16,7 @@ from .SpecialSessionComponent import SpecialSessionComponent
 from .SpecialZoomingComponent import SpecialZoomingComponent
 from .SpecialViewControllerComponent import DetailViewControllerComponent
 from .MIDI_Map import *
+from .EncoderComponent import EncoderComponent
 
 
 # MIDI_NOTE_TYPE = 0
@@ -87,21 +88,96 @@ class AAA_SMC_Mixer(ControlSurface):   # Make sure you update the name
             scene_offset = SCENE_OFFSET
         self._session.link_with_track_offset(track_offset, scene_offset)
 
+    # def _setup_session_control(self):
+    #     is_momentary = True
+    #     # Track selection box size (X,Y) (horizontal, vertical).
+    #     self._session = SpecialSessionComponent(TSB_X, TSB_Y)
+    #     self._session.name = 'Session_Control'
+
+    #     # 1. Criamos uma instância do nosso novo componente
+    #     self._knob_nav_component = EncoderComponent()
+    #     self._knob_nav_component.name = 'Knob_Navigator'
+
+    #     # 2. Dizemos ao componente para "escutar" o CC do nosso knob
+    #     self._knob_nav_component.set_control(self._ctrl_map[KNOB_CUSTOM])
+
+    #     # 3. Mapeamos os botões para navegação de track (esquerda/direita)
+    #     self._session.set_track_bank_buttons(
+    #         self._note_map[SESSIONRIGHT], self._note_map[SESSIONLEFT])
+
+    #     # 4. Mapeamos o nosso knob para a navegação de cena (cima/baixo)
+    #     #    Esta linha é a mágica: estamos usando os botões virtuais do nosso componente!
+    #     self._session.set_scene_bank_buttons(
+    #         self._knob_nav_component.down_button(), self._knob_nav_component.up_button())
+
+    #     self._session.set_track_bank_buttons(
+    #         self._note_map[SESSIONRIGHT], self._note_map[SESSIONLEFT])
+    #     self._session.set_scene_bank_buttons(
+    #         self._note_map[SESSIONDOWN], self._note_map[SESSIONUP])
+    #     self._session.set_select_buttons(
+    #         self._note_map[SCENEDN], self._note_map[SCENEUP])
+    #     # range(tsb_x) is the horizontal count for the track selection box
+    #     self._scene_launch_buttons = [
+    #         self._note_map[SCENELAUNCH[index]] for index in range(TSB_X)]
+    #     # range(tsb_y) Range value is the track selection
+    #     self._track_stop_buttons = [
+    #         self._note_map[TRACKSTOP[index]] for index in range(TSB_Y)]
+    #     self._session.set_stop_all_clips_button(self._note_map[STOPALLCLIPS])
+    #     self._session.set_stop_track_clip_buttons(
+    #         tuple(self._track_stop_buttons))
+    #     self._session.selected_scene().name = 'Selected_Scene'
+    #     self._session.selected_scene().set_launch_button(
+    #         self._note_map[SELSCENELAUNCH])
+    #     self._session.set_slot_launch_button(self._note_map[SELCLIPLAUNCH])
+    #     # Change range() value to set the vertical count for track selection box
+    #     for scene_index in range(TSB_Y):
+    #         scene = self._session.scene(scene_index)
+    #         scene.name = 'Scene_' + str(scene_index)
+    #         button_row = []
+    #         scene.set_launch_button(self._scene_launch_buttons[scene_index])
+    #         scene.set_triggered_value(2)
+    #         # Change range() value to set the horizontal count for track selection box
+    #         for track_index in range(TSB_X):
+    #             button = self._note_map[CLIPNOTEMAP[scene_index][track_index]]
+    #             button_row.append(button)
+    #             clip_slot = scene.clip_slot(track_index)
+    #             clip_slot.name = str(track_index) + \
+    #                 '_Clip_Slot_' + str(scene_index)
+    #             clip_slot.set_launch_button(button)
+    #     self._session_zoom = SpecialZoomingComponent(self._session)
+    #     self._session_zoom.name = 'Session_Overview'
+    #     self._session_zoom.set_nav_buttons(
+    #         self._note_map[ZOOMUP], self._note_map[ZOOMDOWN], self._note_map[ZOOMLEFT], self._note_map[ZOOMRIGHT])
+
+    # Em AAA_SMC_Mixer.py
+
+    # Em AAA_SMC_Mixer.py
+
     def _setup_session_control(self):
         is_momentary = True
-        # Track selection box size (X,Y) (horizontal, vertical).
         self._session = SpecialSessionComponent(TSB_X, TSB_Y)
         self._session.name = 'Session_Control'
+
+        self._knob_nav_component = EncoderComponent()
+        self._knob_nav_component.name = 'Knob_Navigator'
+        self._knob_nav_component.set_control(self._ctrl_map[KNOB_CUSTOM])
+
         self._session.set_track_bank_buttons(
             self._note_map[SESSIONRIGHT], self._note_map[SESSIONLEFT])
+
+        # --- LÓGICA INVERTIDA AQUI ---
+        # Invertemos a ordem de up_button e down_button para que
+        # girar para a direita (up) acione a função "descer" e
+        # girar para a esquerda (down) acione a função "subir".
         self._session.set_scene_bank_buttons(
-            self._note_map[SESSIONDOWN], self._note_map[SESSIONUP])
+            self._knob_nav_component.up_button(), self._knob_nav_component.down_button())
+
         self._session.set_select_buttons(
-            self._note_map[SCENEDN], self._note_map[SCENEUP])
-        # range(tsb_x) is the horizontal count for the track selection box
+            self._knob_nav_component.up_button(), self._knob_nav_component.down_button())
+        # --- FIM DA ALTERAÇÃO ---
+
         self._scene_launch_buttons = [
             self._note_map[SCENELAUNCH[index]] for index in range(TSB_X)]
-        # range(tsb_y) Range value is the track selection
         self._track_stop_buttons = [
             self._note_map[TRACKSTOP[index]] for index in range(TSB_Y)]
         self._session.set_stop_all_clips_button(self._note_map[STOPALLCLIPS])
@@ -111,14 +187,12 @@ class AAA_SMC_Mixer(ControlSurface):   # Make sure you update the name
         self._session.selected_scene().set_launch_button(
             self._note_map[SELSCENELAUNCH])
         self._session.set_slot_launch_button(self._note_map[SELCLIPLAUNCH])
-        # Change range() value to set the vertical count for track selection box
         for scene_index in range(TSB_Y):
             scene = self._session.scene(scene_index)
             scene.name = 'Scene_' + str(scene_index)
             button_row = []
             scene.set_launch_button(self._scene_launch_buttons[scene_index])
             scene.set_triggered_value(2)
-            # Change range() value to set the horizontal count for track selection box
             for track_index in range(TSB_X):
                 button = self._note_map[CLIPNOTEMAP[scene_index][track_index]]
                 button_row.append(button)
