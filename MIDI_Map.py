@@ -28,7 +28,8 @@ TSB_Y = 1   # Controls the vertical value for the track selection box. Default v
 PLAY = -1   # Global play
 STOP = 33   # Global stop
 REC = -1    # Global record
-TAPTEMPO = -1   # Tap tempo
+# TAPTEMPO = -1   # Tap tempo
+TAPTEMPO = 42   # Tap tempo
 NUDGEUP = -1    # Tempo Nudge Up
 NUDGEDOWN = -1  # Tempo Nudge Down
 UNDO = -1   # Undo
@@ -195,8 +196,8 @@ DRUM_PADS = (
 # Valid CC assignments are 0 to 127, or -1 for NONE
 # Duplicate assignments will be ignored
 SLIDERCHANNEL = 1  # Channel assignment for all mapped CCs; valid range is 0 to 15
-TEMPO_TOP = 180.0  # Upper limit of tempo control in BPM (max is 999)
-TEMPO_BOTTOM = 100.0  # Lower limit of tempo control in BPM (min is 0)
+TEMPO_TOP = 200.0  # Upper limit of tempo control in BPM (max is 999)
+TEMPO_BOTTOM = 10.0  # Lower limit of tempo control in BPM (min is 0)
 
 KNOB_CUSTOM = 58  # Knob para movimentação das trilhas
 
